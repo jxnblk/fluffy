@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Fluffy</title>
+</head>
+<body>
+
+  <div id="let-go">
+    <h1 class="js-title"></h1>
+    <p class="js-user-username"></p>
+    duration:
+    <p class="js-duration"></p>
+    <button class="js-playPause">click</button>
+
+  </div>
+
+  <script src="dist/fluffy.js"></script>
+
+  <script>
+    var fluffy = new Fluffy();
+    fluffy.init({
+      el: '#let-go',
+      src: 'http://soundcloud.com/jxnblk/let-go'
+    });
+  </script>
+</body>
+</html>
