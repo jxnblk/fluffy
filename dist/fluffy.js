@@ -58,95 +58,6 @@ module.exports = audio;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
 
-module.exports = function(options) {
-
-  var self = this;
-  var options = options || {};
-  options.prefix = options.prefix || '.js-';
-
-  this.el;
-  this.obj;
-  this.data;
-  this.methods;
-
-  function createData(obj) {
-    var el = self.el;
-    var deep = [];
-    var arr = Object.keys(obj).map(function(key) {
-      var nodes = el.querySelectorAll(options.prefix + key);
-      var value = obj[key];
-      if (typeof value === 'object' && value !== null) {
-        deep = deep.concat(Object.keys(value).map(function(k) {
-          var subnodes = el.querySelectorAll(options.prefix + key + '-' + k);
-          return { nodes: subnodes, value: value[k] };
-        }));
-        return { nodes: nodes }
-      } else {
-        return { nodes: nodes, value: value }
-      }
-    });
-    return arr.concat(deep);
-  }
-
-  function createMethods(obj) {
-    var el = self.el;
-    var arr = Object.keys(obj).map(function(key) {
-      var nodes = el.querySelectorAll(options.prefix + key);
-      return {
-        nodes: nodes,
-        event: obj[key].event,
-        callback: obj[key].callback,
-      }
-    });
-    return arr;
-  }
-
-  function createEventListener(node, ev, callback) {
-    node.method = node.addEventListener(ev, callback);
-  }
-
-  this.config = function(options) {
-  };
-
-
-  this.render = function() {
-    this.data.forEach(function(item) {
-      for (var i = 0; i < item.nodes.length; i++) {
-        var node = item.nodes[i];
-        node.innerText = item.value;
-      }
-    });
-    this.methods.forEach(function(item) {
-      for (var i = 0; i < item.nodes.length; i++) {
-        var node = item.nodes[i];
-        if (!node.method) {
-          createEventListener(node, item.event, item.callback);
-        }
-      }
-    });
-  };
-
-  this.init = function(options) {
-    if (typeof options !== 'object') {
-      console.error(options, 'is not an object');
-      return false;
-    }
-    this.el = document.querySelector(options.el);
-    this.data = createData(options.data || {});
-    this.methods = createMethods(options.methods || {});
-    this.render();
-  };
-
-  this.destroy = function() {
-  };
-
-  return this;
-
-};
-
-
-},{}],4:[function(require,module,exports){
-
 module.exports = function(n, options) {
 
   var options = options || {};
@@ -171,7 +82,7 @@ module.exports = function(n, options) {
 };
 
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 
 var qs = require('query-string');
 var corslite = require('corslite');
@@ -219,7 +130,7 @@ module.exports = function(params) {
 };
 
 
-},{"browser-jsonp":6,"corslite":7,"query-string":8}],6:[function(require,module,exports){
+},{"browser-jsonp":5,"corslite":6,"query-string":7}],5:[function(require,module,exports){
 (function() {
   var JSONP, computedUrl, createElement, encode, noop, objectToURI, random, randomString;
 
@@ -330,7 +241,7 @@ module.exports = function(params) {
 
 }).call(this);
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 function corslite(url, callback, cors) {
     var sent = false;
 
@@ -425,7 +336,7 @@ function corslite(url, callback, cors) {
 
 if (typeof module !== 'undefined') module.exports = corslite;
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*!
 	query-string
 	Parse and stringify URL query strings
@@ -493,36 +404,84 @@ if (typeof module !== 'undefined') module.exports = corslite;
 	}
 })();
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 var Player = require('audio-player');
 var resolve = require('soundcloud-resolve-jsonp');
 var hhmmss = require('hhmmss');
-var Doomo = require('doomo');
 
 var player = new Player();
 
-module.exports = function() {
+module.exports = function(selector, options) {
 
-  var self = this;
-  var doomo = new Doomo();
-  var options = {};
+  var el = document.querySelector(selector);
+  options = options = {};
+
   var client_id = '0d33361983f16d2527b01fbf6408b7d7';
 
-  var icons = {
+  el.icons = {
     play: '<svg class="icon geomicon" viewBox="0 0 32 32" style="position:relative;top:0;fill:currentcolor"><path d="M4 4 L28 16 L4 28 z "></path></svg>',
     pause: '<svg class="icon geomicon" data-icon="pause" viewBox="0 0 32 32" style="position:relative;top:0;fill:currentcolor"><path d="M4 4 H12 V28 H4 z M20 4 H28 V28 H20 z "></path></svg>',
   };
 
-  this.player = player;
-  this.audio = player.audio;
-  this.track = false;
-  this.playlist = false;
-  this.tracks = [];
-  this.index = 0;
-  this.playPauseButton;
-  this.progress;
-  this.currentTime;
+  el.player = player;
+  
+  el.track = false;
+  el.playlist = false;
+  el.tracks = [];
+  el.index = 0;
+
+  el.playPauseButton;
+  el.progress;
+  el.currentTime;
+
+  function repeat(parent, key, arr) {
+    var group = el.querySelector('[data-' + parent + key + ']');
+    if (group) {
+      var iterator = group.querySelector('*');
+      var nodes = arr.map(function(item) {
+        var node = iterator.cloneNode(true);
+        Object.keys(item).forEach(function(k) {
+          var subnode = node.querySelector('[data-' + k + ']');
+          if (subnode) {
+            console.log(subnode, item[k]);
+            subnode.innerText = item[k];
+          }
+        });
+        return node;
+      });
+      iterator.remove();
+      nodes.forEach(function(node) {
+        group.appendChild(node);
+      });
+    }
+  }
+
+  function bindData(obj, parent) {
+    var parent = parent || '';
+    Object.keys(obj).forEach(function(key) {
+      var t = typeof obj[key];
+      if (obj[key] === null) {
+        return false;
+      } else if (Array.isArray(obj[key])) {
+        console.log('isArray', key, Array.isArray(obj[key]));
+        repeat(parent, key, obj[key]);
+      } else if (t === 'object') {
+        bindData(obj[key], key + '-');
+      } else if (t === 'string' || t === 'number' || t === 'boolean') {
+        var selector = '[data-' + parent + key +']';
+        var nodes = el.querySelectorAll(selector);
+        for (var i = 0; i < nodes.length; i++) {
+          var node = nodes[i];
+          if (!node.innerText) {
+            node.innerText = obj[key];
+          }
+        };
+      } else {
+        console.log('its something else', key, t, obj[key]);
+      }
+    });
+  }
 
   function createSrc(track) {
     if (track.stream_url) {
@@ -532,126 +491,126 @@ module.exports = function() {
   }
 
   function bindProgress() {
-    self.progress = doomo.el.querySelector('.js-progress');
-    self.progress.addEventListener('click', self.player.seek);
+    el.progress = el.querySelector('progress');
+    el.progress.addEventListener('click', el.player.seek);
   }
 
   function bindCurrentTime() {
-    self.currentTime = doomo.el.querySelector('.js-current-time');
-    self.currentTime.innerText = hhmmss(0) + ' / ' + hhmmss(self.track.duration / 1000);
+    el.currentTime = el.querySelector('[data-current-time]');
+    if (!el.currentTime) { return false }
+    el.currentTime.innerText = hhmmss(0) + ' / ' + hhmmss(el.track.duration / 1000);
   }
 
   function bindPlayPauseButton() {
-    self.playPauseButton = doomo.el.querySelector('.js-playPause');
-    self.playPauseButton.innerHTML = icons.play;
+    el.playPauseButton = el.querySelector('[data-play-pause]');
+    if (!el.playPauseButton) { return false }
+    el.playPauseButton.innerHTML = el.icons.play;
+    el.playPauseButton.addEventListener('click', function() {
+      el.playPause();
+    });
   }
-
 
   function toggleStates() {
-    if (self.player.playing === self.track.src) {
-      doomo.el.classList.add('is-playing');
-      self.playPauseButton.innerHTML = icons.pause;
+    if (el.player.playing === el.track.src) {
+      el.classList.add('is-playing');
+      el.playPauseButton.innerHTML = el.icons.pause;
     } else {
-      doomo.el.classList.remove('is-playing');
-      self.playPauseButton.innerHTML = icons.play;
+      el.classList.remove('is-playing');
+      el.playPauseButton.innerHTML = el.icons.play;
     }
   }
 
-  this.play = function(i) {
-    if (typeof i !== 'undefined' && self.tracks.length) {
-      self.index = i;
-      self.track = self.tracks[i];
+
+  el.play = function(i) {
+    if (typeof i !== 'undefined' && el.tracks.length) {
+      el.index = i;
+      el.track = el.tracks[i];
     }
-    player.play(scope.track.src);
+    el.player.play(el.track.src);
   };
 
-  this.pause = player.pause;
+  el.pause = el.player.pause;
 
-  this.playPause = function(i) {
-    if (typeof i !== 'undefined' && self.tracks.length) {
-      self.index = i;
-      self.track = self.tracks[i];
+  el.playPause = function(i) {
+    if (typeof i !== 'undefined' && el.tracks.length) {
+      el.index = i;
+      el.track = el.tracks[i];
     }
-    player.playPause(self.track.src);
+    el.player.playPause(el.track.src);
     toggleStates();
   };
 
-  this.previous = function() {
-    if (self.tracks.length < 1) { return false }
-    if (self.index > 0) {
-      self.index--;
-      self.play(self.index);
+  el.previous = function() {
+    if (el.tracks.length < 1) { return false }
+    if (el.index > 0) {
+      el.index--;
+      el.play(el.index);
     }
   };
 
-  this.next = function() {
-    if (self.tracks.length < 1) { return false }
-    if (self.index < self.tracks.length -1) {
-      self.index++;
-      self.play(self.index);
+  el.next = function() {
+    if (el.tracks.length < 1) { return false }
+    if (el.index < el.tracks.length -1) {
+      el.index++;
+      el.play(el.index);
     } else {
-      self.pause();
+      el.pause();
     }
   };
 
-  this.seek = function(e) {
-    if (self.track.src === player.audio.src) {
-      self.player.seek(e);
+  el.seek = function(e) {
+    if (el.track.src === el.player.audio.src) {
+      el.player.seek(e);
     }
   }
 
-  player.audio.addEventListener('timeupdate', function() {
-    if (self.track.src === player.audio.src) {
-      var value = player.audio.currentTime / player.audio.duration || 0;
-      self.progress.value = value;
-      self.currentTime.innerText = hhmmss(player.audio.currentTime) + ' / ' + hhmmss(player.audio.duration);
+  el.player.audio.addEventListener('timeupdate', function() {
+    if (el.track.src === el.player.audio.src) {
+      var value = el.player.audio.currentTime / el.player.audio.duration || 0;
+      el.progress.value = value;
+      el.currentTime.innerText = hhmmss(el.player.audio.currentTime) + ' / ' + hhmmss(el.player.audio.duration);
     }
   });
 
-  player.audio.addEventListener('abort', function() {
+  el.player.audio.addEventListener('abort', function() {
     toggleStates();
   });
 
-  player.audio.addEventListener('ended', function() {
-    console.log('player ended');
+  el.player.audio.addEventListener('ended', function() {
+    //console.log('player ended');
   });
 
-  this.init = function(options) {
-    options = options;
+  function init(selector) {
+    var url = el.dataset.src;
     resolve({
-      url: options.src,
+      url: url,
       client_id: client_id 
     }, function(err, res) {
-      self.track = createSrc(res);
+      el.track = createSrc(res);
       if (Array.isArray(res)) {
-        self.tracks = res.map(function(track) {
+        el.tracks = res.map(function(track) {
           return createSrc(track);
         });
       } else if (res.tracks) {
-        self.playlist = res;
-        self.tracks = res.tracks.map(function(track) {
+        el.playlist = res;
+        el.tracks = res.tracks.map(function(track) {
           return createSrc(track);
         });
+        //bindTracks();
       }
-      doomo.init({
-        el: options.el,
-        data: self.track,
-        methods: {
-          play: { event: 'click', callback: self.play },
-          pause: { event: 'click', callback: self.pause },
-          playPause: { event: 'click', callback: self.playPause },
-          previous: { event: 'click', callback: self.previous },
-          next: { event: 'click', callback: self.next },
-        }
-      });
+      bindData(el.track);
       bindPlayPauseButton();
       bindProgress();
       bindCurrentTime();
     });
+    return el;
   };
+
+
+  return init();
 
 };
 
 
-},{"audio-player":1,"doomo":3,"hhmmss":4,"soundcloud-resolve-jsonp":5}]},{},[9])(9)
+},{"audio-player":1,"hhmmss":3,"soundcloud-resolve-jsonp":4}]},{},[8])(8)
 });

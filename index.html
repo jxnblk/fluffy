@@ -12,55 +12,73 @@
 </head>
 <body>
 
-  <header class="container px2">
-    <h1>Fluffy</h1>
-    <p>Create custom SoundCloud players</p>
-  </header>
 
   <div class="container px2 py4">
 
-    <div id="let-go" class="flex flex-stretch mb3 p2 rounded bg-darken-1">
-      <button class="js-playPause flex-none h2 button mr1 button-transparent rounded" title="Play/Pause">
-      </button>
+    <div id="let-go"
+      data-src="http://soundcloud.com/jxnblk/let-go"
+      class="flex flex-center mb3 p2 rounded bg-darken-1">
+      <button data-play-pause
+        class="flex-none h2 button mr1 button-big button-transparent rounded"
+        title="Play/Pause"></button>
       <div class="flex-auto">
         <div class="flex">
-          <h4 class="js-user-username flex-auto h5 caps m0"></h4>
-          <span class="js-current-time h6"></span>
+          <h4 data-user-username class="flex-auto h5 caps m0"></h4>
+          <span data-current-time class="h6"></span>
         </div>
-        <h3 class="js-title h4 caps m0"></h3>
-        <progress class="js-progress progress blue" value="0"></progress>
+        <h3 data-title class="h4 caps m0"></h3>
+        <progress class="progress blue" value="0"></progress>
       </div>
     </div>
 
-    <div id="really-wanna" class="flex flex-center mb3 p2 rounded bg-darken-1">
-      <button class="js-playPause flex-none h2 button button-big mr1 button-transparent" title="Play/Pause">
-        <svg class="icon geomicon" data-icon="play" viewBox="0 0 32 32" style="fill:currentcolor"><path d="M4 4 L28 16 L4 28 z "></path></svg>
-        <svg class="icon geomicon" data-icon="pause" viewBox="0 0 32 32" style="fill:currentcolor"><path d="M4 4 H12 V28 H4 z M20 4 H28 V28 H20 z "></path></svg>
-      </button>
+    <div id="really-wanna"
+      data-src="http://soundcloud.com/jxnblk/really-wanna"
+      class="flex flex-center mb3 p2 rounded bg-darken-1">
+      <button class="flex-none h2 button button-big mr1 button-transparent"
+        data-play-pause
+        title="Play/Pause"></button>
       <div class="flex-auto">
         <div class="flex">
-          <h4 class="js-user-username flex-auto h5 caps m0"></h4>
-          <span class="js-current-time h6"></span>
+          <h4 data-user-username class="flex-auto h5 caps m0"></h4>
+          <span data-current-time class="h6"></span>
         </div>
-        <h3 class="js-title h4 caps m0"></h3>
-        <progress class="js-progress progress blue" value="0"></progress>
+        <h3 data-title class="h4 caps m0"></h3>
+        <progress class="progress blue" value="0"></progress>
       </div>
     </div>
+
+    <!--
+    <div id="yello"
+      data-src="http://soundcloud.com/jxnblk/sets/yello"
+      class="mb3 p2 rounded bg-darken-1">
+      <button class="flex-none h2 button button-big mr1 button-transparent"
+        data-play-pause
+        title="Play/Pause"></button>
+      <div class="flex-auto">
+        <div class="flex">
+          <h4 data-user-username class="flex-auto h5 caps m0"></h4>
+          <span data-current-time class="h6"></span>
+        </div>
+        <h3 data-title class="h4 caps m0"></h3>
+        <progress class="progress blue" value="0"></progress>
+      </div>
+      <ul data-tracks>
+        <li>
+          <span data-user-username></span>
+          <span data-title></span>
+        </li>
+      </ul>
+    </div>
+    -->
 
   </div>
 
-<script src="dist/fluffy.min.js"></script>
+<script src="dist/fluffy.js"></script>
+
 <script>
-  var letgo = new Fluffy();
-  letgo.init({
-    el: '#let-go',
-    src: 'http://soundcloud.com/jxnblk/let-go'
-  });
-  var reallywanna = new Fluffy();
-  reallywanna.init({
-    el: '#really-wanna',
-    src: 'http://soundcloud.com/jxnblk/really-wanna'
-  });
+  var letgo = new Fluffy('#let-go', {});
+  var reallywanna = new Fluffy('#really-wanna');
+  //var yello = new Fluffy('#yello');
 </script>
 
 </body>
