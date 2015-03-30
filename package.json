@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha test",
     "js": "browserify src/fluffy.js --standalone=Fluffy -o dist/fluffy.js",
-    "watch:js": "watch 'npm run js' ./src",
+    "uglify": "npm run js && uglifyjs dist/fluffy.js -o dist/fluffy.min.js",
+    "watch:js": "watch 'npm run uglify' ./src",
     "serve": "http-server -p 8000",
     "start": "npm run watch:js & npm run serve"
   },
@@ -25,6 +26,7 @@
   "devDependencies": {
     "browserify": "^9.0.3",
     "http-server": "^0.8.0",
+    "uglify-js": "^2.4.19",
     "watch": "^0.14.0"
   }
 }

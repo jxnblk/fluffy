@@ -3,26 +3,65 @@
 <head>
   <meta charset="utf-8">
   <title>Fluffy</title>
+  <link rel="stylesheet" href="http://d2v52k3cl9vedd.cloudfront.net/bassdock/1.2.1/bassdock.min.css">
+  <style>
+    .is-playing { 
+      box-shadow: 0 0 0 2px rgba(0,127,255,.25);
+    }
+  </style>
 </head>
 <body>
 
-  <div id="let-go">
-    <h1 class="js-title"></h1>
-    <p class="js-user-username"></p>
-    duration:
-    <p class="js-duration"></p>
-    <button class="js-playPause">click</button>
+  <header class="container px2">
+    <h1>Fluffy</h1>
+    <p>Create custom SoundCloud players</p>
+  </header>
+
+  <div class="container px2 py4">
+
+    <div id="let-go" class="flex flex-stretch mb3 p2 rounded bg-darken-1">
+      <button class="js-playPause flex-none h2 button mr1 button-transparent rounded" title="Play/Pause">
+      </button>
+      <div class="flex-auto">
+        <div class="flex">
+          <h4 class="js-user-username flex-auto h5 caps m0"></h4>
+          <span class="js-current-time h6"></span>
+        </div>
+        <h3 class="js-title h4 caps m0"></h3>
+        <progress class="js-progress progress blue" value="0"></progress>
+      </div>
+    </div>
+
+    <div id="really-wanna" class="flex flex-center mb3 p2 rounded bg-darken-1">
+      <button class="js-playPause flex-none h2 button button-big mr1 button-transparent" title="Play/Pause">
+        <svg class="icon geomicon" data-icon="play" viewBox="0 0 32 32" style="fill:currentcolor"><path d="M4 4 L28 16 L4 28 z "></path></svg>
+        <svg class="icon geomicon" data-icon="pause" viewBox="0 0 32 32" style="fill:currentcolor"><path d="M4 4 H12 V28 H4 z M20 4 H28 V28 H20 z "></path></svg>
+      </button>
+      <div class="flex-auto">
+        <div class="flex">
+          <h4 class="js-user-username flex-auto h5 caps m0"></h4>
+          <span class="js-current-time h6"></span>
+        </div>
+        <h3 class="js-title h4 caps m0"></h3>
+        <progress class="js-progress progress blue" value="0"></progress>
+      </div>
+    </div>
 
   </div>
 
-  <script src="dist/fluffy.js"></script>
+<script src="dist/fluffy.min.js"></script>
+<script>
+  var letgo = new Fluffy();
+  letgo.init({
+    el: '#let-go',
+    src: 'http://soundcloud.com/jxnblk/let-go'
+  });
+  var reallywanna = new Fluffy();
+  reallywanna.init({
+    el: '#really-wanna',
+    src: 'http://soundcloud.com/jxnblk/really-wanna'
+  });
+</script>
 
-  <script>
-    var fluffy = new Fluffy();
-    fluffy.init({
-      el: '#let-go',
-      src: 'http://soundcloud.com/jxnblk/let-go'
-    });
-  </script>
 </body>
 </html>
